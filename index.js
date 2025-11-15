@@ -58,6 +58,13 @@ async function run(){
         })
 
 
+   app.get('/recent-products',async(req,res)=>{
+    const cursor = productsCollection.find().sort({postDate: -1}).limit(6);
+    const result = await cursor.toArray();
+    res.send(result)
+
+   })
+
         app.get('/products',async(req,res)=>{
             const cursor = productsCollection.find();
             const result = await cursor.toArray();
