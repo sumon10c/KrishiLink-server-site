@@ -36,7 +36,26 @@ async function run(){
 
 
         const db = client.db('KrishiLink')
-        const productsCollection = db.collection('products')
+        const productsCollection = db.collection('products');
+        const userCollection = db.collection('user');
+
+
+        app.post('/user',async(req,res)=>{
+            const newUser = req.body;
+
+            const email = req.body.email;
+            const query = {email:email}
+            const existingUser = await userCollection.findOne(query);
+            if(existingUser) {
+                 res.send({message: "User already registered"})
+            }
+            else{
+                const result = await userCollection.insertOne(newUser);
+                res.send(result);
+            }
+
+            
+        })
 
 
         app.get('/products',async(req,res)=>{
