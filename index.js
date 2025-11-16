@@ -72,8 +72,8 @@ async function run(){
         })
 
         app.get('/products/:id',async(req,res)=>{
-            const id = req.params.id
-            const query = {_id: new ObjectId(id)}
+            const id = req.params.id;
+            const query = {_id: (id)}
             const result = await productsCollection.findOne(query)
             res.send(result)
         })
@@ -86,12 +86,12 @@ async function run(){
         })
 
 
-        app.delete('/products/:id',async(req,res)=>{
-            const id = req.params.id;
-            const query = {_id:new ObjectId(id)}
-            const result = await productsCollection.deleteOne(query)
-            res.send(result)
-        })
+        // app.delete('/products/:id',async(req,res)=>{
+        //     const id = req.params.id;
+        //     const query = {_id:new ObjectId(id)}
+        //     const result = await productsCollection.deleteOne(query)
+        //     res.send(result)
+        // })
 
 
 
