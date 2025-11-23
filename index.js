@@ -38,6 +38,7 @@ async function run(){
         const db = client.db('KrishiLink')
         const productsCollection = db.collection('products');
         const userCollection = db.collection('user');
+        const interestCollection = db.collection('interest')
 
 
         app.post('/user',async(req,res)=>{
@@ -78,12 +79,25 @@ async function run(){
             res.send(result)
         })
 
+        app.post('/interest',async(req,res)=>{
+        const newInterest = req.body;
+        const result = await interestCollection.insertOne(newInterest);
+        res.send(result);
+        })
+
+        app.get("/interest/:email", async (req, res) => {
+        const email = req.params.email;
+        const result = await interestCollection.find({ buyer_email: email }).toArray();
+        res.send(result);
+        });
 
         app.post('/products',async(req,res)=>{
             const newProducts = req.body;
             const result = await productsCollection.insertOne(newProducts);
             res.send(result);
         })
+
+       
 
 
         // app.delete('/products/:id',async(req,res)=>{
