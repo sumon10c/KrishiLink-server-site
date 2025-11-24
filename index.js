@@ -19,7 +19,7 @@ app.get('/',(req,res)=>{
 
 
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+
 const client = new MongoClient(uri, {
     serverApi: {
       version: ServerApiVersion.v1,
@@ -98,6 +98,46 @@ async function run(){
             res.send(result)
         })
 
+
+
+app.post('/products', async (req, res) => {
+  const newCrop = req.body;
+  
+  if (!newCrop.name || !newCrop.userEmail) {
+    return res.status(400).send({ message: "Name and userEmail are required" });
+  }
+
+  const result = await productsCollection.insertOne(newCrop);
+  res.send(result);
+});
+
+
+
+
+
+app.get('/my-products', async (req, res) => {
+  const userEmail = req.query.userEmail;
+  if (!userEmail) {
+    return res.status(400).send({ message: "userEmail is required" });
+  }
+const products = await productsCollection.find({ userEmail }).toArray();
+  res.send(products);
+});
+
+
+
+app.delete('/products/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    const result = await productsCollection.deleteOne({ _id: new ObjectId(id) });
+    res.send(result);
+  } catch (err) {
+    res.status(500).send({ message: "Failed to delete", error: err.message });
+  }
+});
+  
+
+
         app.get('/products/:id',async(req,res)=>{
             const id = req.params.id;
             const query = {_id: (id)} 
@@ -126,17 +166,6 @@ async function run(){
        
 
 
-        // app.delete('/products/:id',async(req,res)=>{
-        //     const id = req.params.id;
-        //     const query = {_id:new ObjectId(id)}
-        //     const result = await productsCollection.deleteOne(query)
-        //     res.send(result)
-        // })
-
-
-
-
-        // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     }
