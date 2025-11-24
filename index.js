@@ -64,7 +64,33 @@ async function run(){
     const result = await cursor.toArray();
     res.send(result)
 
-   })
+   }) 
+
+   app.get("/user/:email", async (req, res) => {
+    const email = req.params.email;
+    const result = await userCollection.findOne({ email: email });
+    res.send(result);
+  });
+          
+   app.patch("/user/:id", async (req, res) => {
+    const id = req.params.id;
+    const updatedData = req.body;
+  
+    const filter = { _id: new ObjectId(id) };
+    const updateDoc = {
+      $set: {
+        name: updatedData.name,
+        photo: updatedData.photo,
+        phone: updatedData.phone,
+      }
+    };
+  
+    const result = await userCollection.updateOne(filter, updateDoc);
+    res.send(result);
+  });
+
+     
+
 
         app.get('/products',async(req,res)=>{
             const cursor = productsCollection.find();
@@ -74,7 +100,7 @@ async function run(){
 
         app.get('/products/:id',async(req,res)=>{
             const id = req.params.id;
-            const query = {_id: (id)}
+            const query = {_id: (id)} 
             const result = await productsCollection.findOne(query)
             res.send(result)
         })
