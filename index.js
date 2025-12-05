@@ -32,7 +32,7 @@ const client = new MongoClient(uri, {
 
 async function run(){
     try{
-        await client.connect();
+        // await client.connect();
 
 
         const db = client.db('KrishiLink')
@@ -135,6 +135,24 @@ app.delete('/products/:id', async (req, res) => {
     res.status(500).send({ message: "Failed to delete", error: err.message });
   }
 });
+
+
+
+// UPDATE CROP
+app.put('/products/:id', async (req, res) => {
+  const id = req.params.id;
+  const updatedData = req.body;
+
+  try {
+    const filter = { _id: new ObjectId(id) };
+    const updateDoc = { $set: updatedData };
+    const result = await productsCollection.updateOne(filter, updateDoc);
+    res.send(result); // { acknowledged: true, modifiedCount: 1, ... }
+  } catch (err) {
+    res.status(500).send({ message: "Failed to update crop", error: err.message });
+  }
+});
+
   
 
 
@@ -166,7 +184,7 @@ app.delete('/products/:id', async (req, res) => {
        
 
 
-        await client.db("admin").command({ ping: 1 });
+        // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     }
     finally{
